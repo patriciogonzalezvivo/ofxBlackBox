@@ -1,0 +1,6 @@
+ofxBlackBox
+by Patricio Gonzalez Vivo ©2010
+http://www.patriciogonzalezvivo.com 
+
+Despite the cheesy name, the goal was to make an addon for openFrameworks with a minimalist aesthetic orientation.
+It is fully compatible with TUIO and objects can be dragged, resized, and rotated with two fingers. Making a good alternative as an interface to multitouch projects
