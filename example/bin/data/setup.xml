@@ -1,0 +1,57 @@
+<BOX>
+    <X>0</X>
+    <Y>0</Y>
+    
+    <WIDTH>500</WIDTH>
+    <HEIGHT>200</HEIGHT>
+    
+    <MARGEN>20</MARGEN>
+    
+    <CLOSE>1</CLOSE>
+    <ALPHA>0</ALPHA>
+    <ANGLE>0</ANGLE>
+    
+    <BACKGROUND>
+        <RED>0</RED>
+        <GREEN>0</GREEN>
+        <BLUE>0</BLUE>
+    </BACKGROUND>
+    <FOREGROUND>
+        <RED>255</RED>
+        <GREEN>255</GREEN>
+        <BLUE>255</BLUE>
+    </FOREGROUND>
+    
+    <DEFAULT_FONT>
+        <PATH>helvetica.ttf</PATH>
+        <SIZE>10</SIZE>
+    </DEFAULT_FONT>
+    
+    <OBJECTS>
+        <OBJ>
+            <TYPE>TEXT</TYPE>
+            <ALIGMENT>CENTER</ALIGMENT>
+            <TEXT>SABALO</TEXT>
+        </OBJ>
+        <OBJ> 
+            <TYPE>VIDEO</TYPE>
+            <PATH>raya.mov</PATH>
+        </OBJ>
+        <OBJ>
+            <TYPE>TEXT</TYPE>
+            <ALIGMENT>JUSTIFIED</ALIGMENT>
+            <TEXT>El sabalo es un pez robusto y de cuerpo fusiforne. El dorso es azulado y los flancos plateados, la boca es peque–a, carece de dientes en sus maxilares, pero los tiene, muy diminutos, en sus labios, por lo que su acci—n para comer, se reduce a chupar continuamente el limo donde encuentra elementos sustanciales para su desarrollo.</TEXT>
+        </OBJ>
+        <OBJ>
+            <TYPE>TEXT</TYPE>
+            <ALIGMENT>JUSTIFIED</ALIGMENT>
+            <TEXT>Debe ser suficiente lo que encuentra pues alcanza buen tama–o y su carne, es abundante y grasosa. ƒsta es la raz—n por la que se lo persigue y se lo pesca- con grandes redes de arrastre y en enormes cantidades.</TEXT>
+        </OBJ>
+        <OBJ>
+            <TYPE>BUTTON</TYPE>
+            <WIDTH>100</WIDTH>
+            <HEIGHT>30</HEIGHT>
+            <TEXT>OK</TEXT>
+        </OBJ>
+    </OBJECTS>
+</BOX>

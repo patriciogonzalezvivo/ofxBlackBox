@@ -1,0 +1,42 @@
+<install>
+
+	<version>1.0</version>
+	<author>Mehmet Akten</author>
+	<url>http://www.msalibs.org</url>
+    
+	<requires>
+		<addon></addon>
+	</requires>
+
+	<add>	
+		<src>
+			<folder name="addons/MSACore/src">			
+				<file>../../../addons/MSACore/src/MSACore-Cinder.h</file>
+				<file>../../../addons/MSACore/src/MSACore-OF.h</file>
+				<file>../../../addons/MSACore/src/MSACore.h</file>
+				<file>../../../addons/MSACore/src/MSACoreCommon.h</file>
+				<file>../../../addons/MSACore/src/MSACoreGL.h</file>
+				<file>../../../addons/MSACore/src/MSACoreGL.cpp</file>
+				<file>../../../addons/MSACore/src/MSACoreMath.h</file>
+			</folder> 
+			<folder name="addons/MSACore/src/cinder-lite">			
+				<file>../../../addons/MSACore/src/cinder-lite/ChanTraits.h</file>
+				<file>../../../addons/MSACore/src/cinder-lite/CinderMath</file>
+				<file>../../../addons/MSACore/src/cinder-lite/Color.cpp</file>
+				<file>../../../addons/MSACore/src/cinder-lite/Color.h</file>
+				<file>../../../addons/MSACore/src/cinder-lite/Vector.h</file>
+			</folder>  			
+
+		</src>
+
+		<include>
+			<path>../../../addons/MSACore/src</path>
+			<path>../../../addons/MSACore/src/cinder-lite</path>
+		</include>
+		
+		<link>
+		</link>
+
+	</add>
+	
+</install>
