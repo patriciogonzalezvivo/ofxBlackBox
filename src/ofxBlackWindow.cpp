@@ -43,6 +43,8 @@ ofxBlackWindow::ofxBlackWindow(){
 	margen	= 20;
 	
 	timer	= 0;
+	delay	= 0;
+	
 	scale	= 1;
 	
 	background.set(CM_RGB,Vec3f(0,0,0));
@@ -55,7 +57,7 @@ bool ofxBlackWindow::setup(string filePath){
 		XML.pushTag("BOX");
 		position		= Vec2f(XML.getValue("X",0),XML.getValue("Y",0));
 		width			= XML.getValue("WIDTH",500);
-		height			= XML.getValue("HEIGHT",200);
+		height			= XML.getValue("HEIGHT",0);
 		margen			= XML.getValue("MARGEN",20);
 		
 		angle			= XML.getValue("ANGLE",0);
@@ -64,6 +66,8 @@ bool ofxBlackWindow::setup(string filePath){
 		background.set(CM_RGB,Vec3f(XML.getValue("BACKGROUND:RED", 0),XML.getValue("BACKGROUND:GREEN", 0),XML.getValue("BACKGROUND:BLUE", 0)));
 		foreground.set(CM_RGB,Vec3f(XML.getValue("FOREGROUND:RED", 255),XML.getValue("FOREGROUND:GREEN", 255),XML.getValue("FOREGROUND:BLUE", 255)));
 		alpha			= XML.getValue("ALPHA",0);
+		
+		delay			= XML.getValue("DELAY",0);
 		
 		
 		setFont(XML.getValue("DEFAULT_FONT:PATH","helvetica.ttf"), XML.getValue("DEFAULT_FONT:SIZE",10));
@@ -74,7 +78,7 @@ bool ofxBlackWindow::setup(string filePath){
 		int numOfObj = XML.getNumTags("OBJ");
 		cout << " with " << numOfObj << " to be load: ";
 		
-		// --------- load them in to the vector
+		// ------------------------------- Load the data of the object and make the link to the main window
 		for (int i = 0; i < numOfObj; i++){
 			XML.pushTag("OBJ", i);
 			string typeName = XML.getValue("TYPE","NONE");
@@ -90,6 +94,10 @@ bool ofxBlackWindow::setup(string filePath){
 				v->loadVideo(XML.getValue("PATH","raya.mov"));
 				v->resize(0.5);
 				
+				if (XML.tagExists("ACTION",0)){
+					v->act = XML.getValue("ACTION","no action found");
+				}
+				
 				objects.push_back(v);
 				cout << "video ";
 				
@@ -103,6 +111,10 @@ bool ofxBlackWindow::setup(string filePath){
 				
 				i->loadImage(XML.getValue("PATH","raya.png"));
 				i->resize(0.5);
+				
+				if (XML.tagExists("ACTION",0)){
+					i->act = XML.getValue("ACTION","no action found");
+				}
 				
 				objects.push_back(i);
 				cout << "image ";
@@ -123,8 +135,8 @@ bool ofxBlackWindow::setup(string filePath){
 				
 				if (XML.tagExists("PATH",0))
 					t->loadTextFrom(XML.getValue("PATH","pez1.txt"));
-				else if (XML.tagExists("TEXT",0)) t->loadText(XML.getValue("TEXT","EMPTY TEXT"));
-				else t->loadText("NO TEXT FOUND");
+				else if (XML.tagExists("TEXT",0)) t->loadText(XML.getValue("TEXT","insert text inside <TEXT> here </TEXT>"));
+				else t->loadText("no text found");
 				
 				if (XML.tagExists("ALIGMENT",0)){
 					string align = XML.getValue("ALIGMENT","JUSTIFIED");
@@ -141,6 +153,10 @@ bool ofxBlackWindow::setup(string filePath){
 				t->setWidth(width-margen*2);
 				t->height = t->getTextHeight();
 				
+				if (XML.tagExists("ACTION",0)){
+					t->act = XML.getValue("TEXT","no action found");
+				}
+				
 				objects.push_back(t);
 				cout << "text ";
 			} else if (typeName == "BUTTON"){
@@ -154,29 +170,45 @@ bool ofxBlackWindow::setup(string filePath){
 				b->setSize(XML.getValue("WIDTH",50), XML.getValue("HEIGHT",30));
 				b->setLetter(XML.getValue("TEXT","no text found"));
 				
+				if (XML.tagExists("ACTION",0)){
+					b->act = XML.getValue("ACTION","no action found");
+				}
+				
 				objects.push_back(b);
 				cout << "button ";
 				
 			} else cout << "ERROR loading the object number "<< i << endl;
 			XML.popTag();
 		}
-		XML.popTag();
+		
 		cout << "done." << endl;
 		// ------------------------------- calculate the total Height
-		height = margen;
-		for (int i = 0; i < numOfObj; i++){
-			height += objects[i]->height + margen;
-		}
-		cout << "Height calculated" << endl;
+		if ( height == 0){		// If height is 0 it´s set on AUTO mode and it will calculate the height
+			height = margen;
+			for (int i = 0; i < numOfObj; i++){
+				XML.pushTag("OBJ", i);
+					if (!XML.tagExists("POSITION",0)) height += objects[i]->height + margen;
+				XML.popTag();
+			}
+		} else height = XML.getValue("HEIGHT",200);
+		cout << "Height calculated" << endl;		// Other wise it´s going to put wat is said.
 		
 		// ------------------------------- Set positions by order
 		float yPos = -height*0.5+margen;
 		for (int i = 0; i < numOfObj; i++){
-			objects[i]->moveTo(position.x, position.y +yPos+objects[i]->height*0.5);
-			yPos += objects[i]->height + margen;
+			XML.pushTag("OBJ", i);			// IF the position is declarated, it will give automatic positions depending on the position on the vector
+			if (XML.tagExists("POSITION",0)){
+				objects[i]->moveTo(XML.getValue("POSITION:X",0),XML.getValue("POSITION:Y",0));
+			} else {
+				objects[i]->moveTo(position.x, position.y +yPos+objects[i]->height*0.5);
+				yPos += objects[i]->height + margen;
+			} 
+			XML.popTag();
 		}
 		cout << "Position stablished" << endl;
-		XML.popTag();
+		XML.popTag();	// OBJECTS
+			
+		XML.popTag();	// BOX
 		return true;
 	} else {
 		ofxBlackWindow();
@@ -187,16 +219,22 @@ bool ofxBlackWindow::setup(string filePath){
 void ofxBlackWindow::update(){
 	// Handles the fade out and fade with the closing and opening
 	if (close) {
-		if (alpha > 0) alpha -= 4;
+		if (alpha > 0) alpha -= 20;
 		if (alpha == 0){
 			angle = 0;
 		}
 	} else {
-		if (alpha <= 255) alpha += 2;
+		if (alpha <= 255) alpha += 20;
 	}
 	
 	if (timer >= 1) timer++;
-	if (timer >= 15) timer = 0;
+	//if (timer >= 15) timer = 0;
+	
+	if (( delay != 0) && (timer >= delay)) {
+		close = true;
+		timer = 0;
+	}
+	
 	
 	for (int i = 0; i < objects.size(); i++){
 		objects[i]->update();
@@ -226,4 +264,17 @@ void ofxBlackWindow::draw(){
 			objects[i]->draw();
 		}
 	}
+}
+
+bool ofxBlackWindow::checkObjects(Vec2f _loc){
+	bool pressed = false;
+	
+	if (isOver(_loc))
+		for(int i = 0; i< objects.size(); i++)
+			if (objects[i]->isOver(_loc)){
+				ofNotifyEvent(objectPressed, objects[i]->act,this);
+				pressed = true;
+			}
+	
+	return pressed;
 }

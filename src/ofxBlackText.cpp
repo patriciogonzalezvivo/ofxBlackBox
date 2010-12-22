@@ -151,7 +151,7 @@ void ofxBlackText::draw(){
 			default:
 				drawTextJustified(-width*0.5,-height*0.5,getTextWidth()*0.5);//-height*0.5, getTextWidth()*0.5);
 		}
-	ofPopMatrix();	
+	ofPopMatrix();
 }
 
 // ------------------------------------------- Text Funtions

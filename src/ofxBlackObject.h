@@ -80,13 +80,15 @@ public:
 	
 	void	reCalcPos();	// Recalculate the position and angle of the object from the center and rotation of the windows
 	
+	string	act;
+	
 	virtual void	update(){};
 	virtual void	draw(){};
 	
 	// Checkers. someday this will become events
 	bool over;
-	bool isOver(int _x, int _y){isOver(Vec2f(_x,_y));};
 	bool isOver(Vec2f _location);
+	bool isOver(int _x, int _y){isOver(Vec2f(_x,_y));};
 };
 
 #endif

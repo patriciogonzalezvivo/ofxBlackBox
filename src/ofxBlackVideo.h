@@ -36,13 +36,25 @@
 #include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
 #include "ofxBlackObject.h"
 
+#define	OF_VIDEO_WITH_ALPHA		// Coment this if you don´t have ofxAlpaVideo
+
+#ifdef OF_VIDEO_WITH_ALPHA
+#include "ofxAlphaVideoPlayer.h"
+#endif
+
+
 using namespace MSA;
 
 class ofxBlackVideo : public ofxBlackObject{	
 public:
 	ofxBlackVideo();
 	
+#ifdef OF_VIDEO_WITH_ALPHA
+	ofxAlphaVideoPlayer video;
+#else
 	ofVideoPlayer	video;
+#endif
+	
 	void			loadVideo(string videoPath){video.loadMovie(videoPath.c_str()); width = video.width; height = video.height; video.play();};
 	
 	void			resize(float _resize){ width *= _resize; height *= _resize;};

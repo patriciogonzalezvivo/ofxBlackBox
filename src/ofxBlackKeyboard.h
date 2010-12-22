@@ -45,9 +45,9 @@ public:
 	int				nKeys;								// Number of loaded keys
 	ofxBlackButton	keys[200];							// Array of keys
 	int				cKey;								// Position on the array of the selected key
-	
-	ofEvent<string> keyPressed;							// Key Event	
+		
 	ofxBlackKeyboard();
+	ofEvent<string> keyPressed;
 	
 	// Initial setup. It must be set before updating or drawing;
 	void loadmap(const string& filePath);

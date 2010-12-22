@@ -48,6 +48,8 @@ public:
 	
 	//bool	close;		// Close trigger
 	float	radio;
+	float	delay;
+	
 	
 	ofxBlackWindow();
 	//----------------- Preferences
@@ -60,6 +62,11 @@ public:
 	
 	//------------------ Objetos
 	vector <ofxBlackObject*>	objects;
+	
+	bool checkObjects(Vec2f _loc);
+	bool checkObjects(int _x, int _y){checkObjects(Vec2f(_x,_y));};
+	
+	ofEvent<string> objectPressed;
 };
 
 #endif

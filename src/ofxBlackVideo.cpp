@@ -43,13 +43,23 @@ void ofxBlackVideo::draw(){
 		ofTranslate(position.x, position.y);
 		ofRotateZ(ofRadToDeg(*windowNorth));
 		ofEnableAlphaBlending();
-	
+
+#ifdef OF_VIDEO_WITH_ALPHA
+		
+#else
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
+#endif
 			ofFill();
-			ofSetColor(255,255,255,*alpha);
+			ofSetColor(*alpha,*alpha,*alpha,*alpha);
 			video.draw(-width*(*scale)*0.5,-height*(*scale)*0.5, width*(*scale),height*(*scale));
+
+#ifdef OF_VIDEO_WITH_ALPHA
+		
+#else
 			glDisable(GL_BLEND);
+#endif
+			
     
 		ofDisableAlphaBlending();
 		ofPopMatrix();

@@ -190,7 +190,7 @@ void ofxBlackBox::tuioRemoved(ofxTuioCursor &tuioCursor){
 			cursorsOnBorder.erase(cursorsOnBorder.begin()+i);
 	
 	if ( isOver(loc) && (cursorsOnBorder.size() == 0) && (close == false)) {
-		if (timer > 2) close = true;
+		if ((timer > 2) && (timer <= 15)) close = true;
 		else timer = 1;
 	}
 }
