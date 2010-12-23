@@ -41,43 +41,22 @@ using namespace MSA;
 class ofxBlackKeyboard : public ofxBlackBox{
 	
 public:
-	// puede reemplazarse por ofxBlackObjects... no?
-	int				nKeys;								// Number of loaded keys
-	ofxBlackButton	keys[200];							// Array of keys
-	int				cKey;								// Position on the array of the selected key
-		
+			
 	ofxBlackKeyboard();
+	
+	//int				cKey;								// Position on the array of the selected key
 	ofEvent<string> keyPressed;
 	
-	// Initial setup. It must be set before updating or drawing;
-	void loadmap(const string& filePath);
-	
-	// Acctions
-	void draw();
+	// Reading and writting of the layermap files ending with .kbd
+	void loadMap(const string& kbdFile);
+	void saveMap(const string& kbdFile);
 	
 	// Edit keyboard actions
 	void addKey(string _letter, int _x, int _y, int _width, int _height);				// Pass the cartesian x and y cordinates of the screen
-	void moveKeyTo(int _indexKey, int _x, int _y ){ keys[_indexKey].moveTo(_x,_y); };	// Pass the cartesian x and y cordinates of the screen
-	void moveCurrentKeyTo(int _x, int _y ){ keys[cKey].moveTo(_x,_y); };
-	void savemap(const string& filePath);
+	void moveKeyTo(int _indexKey, int _x, int _y ){ objects[_indexKey]->moveTo(_x,_y); };	// Pass the cartesian x and y cordinates of the screen
+	//void moveCurrentKeyTo(int _x, int _y ){ objects[cKey]->moveTo(_x,_y); };
 	
 	bool isOnBorder(Vec2f _loc);
 	bool isOnBorder(int _x, int _y){isOnBorder(Vec2f(_x,_y));};
-	
-	bool checkKeys(Vec2f _loc);
-	bool checkKeys(int _x, int _y){checkKeys(Vec2f(_x,_y));};
-	
-#ifdef USE_TUIO
-	myTuioClient * tuioClient;
-	void	setTuioClient (myTuioClient * _tuioClient);
-	
-	vector<tCursor>	cursorsOnBorder;
-	Vec2f	oldLoc[3];
-	
-	// TUIO Events Handlers
-	void	tuioAdded(ofxTuioCursor & tuioCursor);
-	void	tuioRemoved(ofxTuioCursor & tuioCursor);
-	void	tuioUpdated(ofxTuioCursor & tuioCursor);
-#endif
 };
 #endif

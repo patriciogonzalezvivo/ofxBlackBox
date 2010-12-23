@@ -58,6 +58,31 @@ void ofxBlackBox::resize(float _resize){
 	scale *= _resize;
 }
 
+void ofxBlackBox::draw(){
+	
+	if (alpha > 1){
+		glDisable(GL_BLEND);
+		ofEnableAlphaBlending();
+		ofPushMatrix();
+		ofTranslate(position.x, position.y);
+		ofRotateZ(ofRadToDeg(angle));
+		
+		//Dibuja la caja
+		ofSetColor(background.r,background.g,background.b,alpha-70);
+		ofFill();
+		rBox();
+		
+		ofPopMatrix();
+		ofDisableAlphaBlending();
+		
+		// Dibuja los objetos
+		for (int i = 0; i < objects.size(); i++){
+			ofSetColor(255,255,255,alpha);
+			objects[i]->draw();
+		}
+	}
+}
+
 void ofxBlackBox::rBox(){
 	float a = (height/12);
 	float b = a/6;
@@ -102,6 +127,20 @@ bool ofxBlackBox::isOver(int _x , int _y){
 	} else return false;
 }
 
+bool ofxBlackBox::checkObjects(Vec2f _loc){
+	bool pressed = false;
+	
+	if (isOver(_loc))
+		for(int i = 0; i< objects.size(); i++)
+			if (objects[i]->isOver(_loc)){
+				ofNotifyEvent(objectPressed, objects[i]->act,this);
+				focusObject = i;
+				pressed = true;
+			}
+	
+	return pressed;
+}
+
 // ------------------------------------------ TUIO events for MultiTouch interaction
 #ifdef USE_TUIO
 void ofxBlackBox::setTuioClient (myTuioClient * _tuioClient){
@@ -117,19 +156,22 @@ void ofxBlackBox::tuioAdded(ofxTuioCursor &tuioCursor){
 	Vec2f loc = Vec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
 	
 	if (isOver(loc)){
-		tCursor c;
-		c.idN = tuioCursor.getSessionId();
-		c.loc = loc;
+		timer = 1;
+		checkObjects(loc);
 		
-		if (cursorsOnBorder.size() == 0){	// If it´s the first finger over the border it will save remember it
-			cursorsOnBorder.push_back(c);
-		} else if (cursorsOnBorder.size() == 1){	// If it´s the second one it will check if it´s at the right distance
-			cursorsOnBorder.push_back(c);
+			tCursor c;
+			c.idN = tuioCursor.getSessionId();
+			c.loc = loc;
+		
+			if (cursorsOnBorder.size() == 0){	// If it´s the first finger over the border it will save remember it
+				cursorsOnBorder.push_back(c);
+			} else if (cursorsOnBorder.size() == 1){	// If it´s the second one it will check if it´s at the right distance
+				cursorsOnBorder.push_back(c);
 			
-			oldLoc[0] = cursorsOnBorder[0].loc;
-			oldLoc[1] = cursorsOnBorder[1].loc;
-		}
-		//}
+				oldLoc[0] = cursorsOnBorder[0].loc;
+				oldLoc[1] = cursorsOnBorder[1].loc;
+			}
+		
 	}
 }
 

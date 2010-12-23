@@ -100,8 +100,6 @@ public:
 	ofTrueTypeFont	*	defaultFont;
 	void				setFont(ofTrueTypeFont * _font);
 	
-	
-	
 	vector<wordBlock>   words;
 	vector<lineBlock>   lines;
 	void				loadText(string _inputText);

@@ -54,7 +54,7 @@ ofxBlackWindow::ofxBlackWindow(){
 bool ofxBlackWindow::setup(string filePath){
 	if (XML.loadFile(filePath)){
 		cout << "Opening " << filePath;
-		XML.pushTag("BOX");
+		XML.pushTag("WINDOW");
 		position		= Vec2f(XML.getValue("X",0),XML.getValue("Y",0));
 		width			= XML.getValue("WIDTH",500);
 		height			= XML.getValue("HEIGHT",0);
@@ -159,7 +159,25 @@ bool ofxBlackWindow::setup(string filePath){
 				
 				objects.push_back(t);
 				cout << "text ";
-			} else if (typeName == "BUTTON"){
+			} else if (typeName == "TEXTINPUT"){
+				ofxBlackTextInput * ti = new ofxBlackTextInput();
+				ti->setScale(&scale);
+				ti->setFont(&defaultFont);
+				ti->setWindowNorth(&angle);
+				ti->setWindowCenter(&position);
+				ti->setColors(&background,&foreground);
+				ti->setAlpha(&alpha);
+				ti->setSize(XML.getValue("WIDTH",50), XML.getValue("HEIGHT",30));
+				ti->label = XML.getValue("TEXT","no text found");
+				
+				if (XML.tagExists("ACTION",0)){
+					ti->act = XML.getValue("ACTION"," ");
+				}
+				
+				objects.push_back(ti);
+				cout << "button ";
+			} 
+			else if (typeName == "BUTTON"){
 				ofxBlackButton * b = new ofxBlackButton();
 				b->setScale(&scale);
 				b->setFont(&defaultFont);
@@ -187,7 +205,7 @@ bool ofxBlackWindow::setup(string filePath){
 			height = margen;
 			for (int i = 0; i < numOfObj; i++){
 				XML.pushTag("OBJ", i);
-					if (!XML.tagExists("POSITION",0)) height += objects[i]->height + margen;
+					if (!XML.tagExists("Y",0)) height += objects[i]->height + margen;
 				XML.popTag();
 			}
 		} else height = XML.getValue("HEIGHT",200);
@@ -197,12 +215,16 @@ bool ofxBlackWindow::setup(string filePath){
 		float yPos = -height*0.5+margen;
 		for (int i = 0; i < numOfObj; i++){
 			XML.pushTag("OBJ", i);			// IF the position is declarated, it will give automatic positions depending on the position on the vector
-			if (XML.tagExists("POSITION",0)){
-				objects[i]->moveTo(XML.getValue("POSITION:X",0),XML.getValue("POSITION:Y",0));
-			} else {
-				objects[i]->moveTo(position.x, position.y +yPos+objects[i]->height*0.5);
+			int tempX = position.x;
+			int tempY = position.y;
+				
+			if (XML.tagExists("X",0)) tempX = XML.getValue("X",0);
+			if (XML.tagExists("Y",0)) tempY = XML.getValue("Y",0);
+			else { tempY += yPos+objects[i]->height*0.5;
 				yPos += objects[i]->height + margen;
-			} 
+			}
+				
+			objects[i]->moveTo(tempX,tempY);
 			XML.popTag();
 		}
 		cout << "Position stablished" << endl;
@@ -239,42 +261,4 @@ void ofxBlackWindow::update(){
 	for (int i = 0; i < objects.size(); i++){
 		objects[i]->update();
 	}
-}
-
-void ofxBlackWindow::draw(){
-	
-	if (alpha > 1){
-		glDisable(GL_BLEND);
-		ofEnableAlphaBlending();
-		ofPushMatrix();
-		ofTranslate(position.x, position.y);
-		ofRotateZ(ofRadToDeg(angle));
-		
-		//Dibuja la caja
-		ofSetColor(background.r,background.g,background.b,alpha-70);
-		ofFill();
-		rBox();
-		
-		ofPopMatrix();
-		ofDisableAlphaBlending();
-		
-		// Dibuja los objetos
-		for (int i = 0; i < objects.size(); i++){
-			ofSetColor(255,255,255,alpha);
-			objects[i]->draw();
-		}
-	}
-}
-
-bool ofxBlackWindow::checkObjects(Vec2f _loc){
-	bool pressed = false;
-	
-	if (isOver(_loc))
-		for(int i = 0; i< objects.size(); i++)
-			if (objects[i]->isOver(_loc)){
-				ofNotifyEvent(objectPressed, objects[i]->act,this);
-				pressed = true;
-			}
-	
-	return pressed;
 }

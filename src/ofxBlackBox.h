@@ -43,10 +43,11 @@
 #include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
 
 #include "ofxBlackObject.h"
-#include "ofxBlackButton.h"
 #include "ofxBlackVideo.h"
 #include "ofxBlackImage.h"
 #include "ofxBlackText.h"
+#include "ofxBlackTextInput.h"
+#include "ofxBlackButton.h"
 
 #include <vector>
 
@@ -69,7 +70,11 @@ public:
 	float	margen;
 	
 	ofxBlackBox();
+	vector <ofxBlackObject*>	objects;
+	int		focusObject;
 	
+	ofEvent<string> objectPressed;
+
 	Vec2f	position;
 	void	setPosition(int _x, int _y){position.x = _x; position.y = _y;};
 	
@@ -88,12 +93,15 @@ public:
 	
 	//------------------ Actions
 	virtual void	update(){};
-	virtual void	draw(){};
+	void	draw();
 	void	rBox();
 	
 	//------------------ Questions
 	bool	isOver(int _x, int _y);
 	bool	isOver(Vec2f _loc){isOver(_loc.x,_loc.y);};
+	
+	bool	checkObjects(Vec2f _loc);
+	bool	checkObjects(int _x, int _y){checkObjects(Vec2f(_x,_y));};
 	
 #ifdef USE_TUIO
 	myTuioClient * tuioClient;

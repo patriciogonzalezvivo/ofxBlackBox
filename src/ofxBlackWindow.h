@@ -58,15 +58,7 @@ public:
 	
 	//------------------ Actions
 	void	update();
-	void	draw();
-	
-	//------------------ Objetos
-	vector <ofxBlackObject*>	objects;
-	
-	bool checkObjects(Vec2f _loc);
-	bool checkObjects(int _x, int _y){checkObjects(Vec2f(_x,_y));};
-	
-	ofEvent<string> objectPressed;
+	//void	draw();
 };
 
 #endif

@@ -36,7 +36,7 @@
 #include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
 #include "ofxBlackObject.h"
 
-#define	OF_VIDEO_WITH_ALPHA		// Coment this if you don´t have ofxAlpaVideo
+//#define	OF_VIDEO_WITH_ALPHA		// Coment this if you don´t have ofxAlpaVideo
 
 #ifdef OF_VIDEO_WITH_ALPHA
 #include "ofxAlphaVideoPlayer.h"
