@@ -2,17 +2,16 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-	//ofEnableSmoothing();
 	fondo.loadImage("fondo.jpg");
 	ofSetWindowShape(fondo.width,fondo.height);
 	
 	keyboard.setFont("helvetica.ttf",13);
-	keyboard.loadmap("mac.kbd");
+	keyboard.loadMap("mac.kbd");
 	keyboard.alpha = 200;
-	
-	ofAddListener(keyboard.keyPressed,this,&testApp::virtualKeyPressed);
+	ofAddListener(keyboard.objectPressed,this,&testApp::keyboardPressed);
 	
 	window.setup("setup.xml");
+	ofAddListener(window.objectPressed,this,&testApp::windowPressed);
 	
 #ifdef USE_TUIO
 	ofAddListener(tuioClient.cursorAdded,this,&testApp::tuioAdded);
@@ -56,13 +55,17 @@ void testApp::keyPressed(int key){
 	switch(key) {
 		case 'f': ofToggleFullscreen(); break;
 		case 'n': keyboard.addKey("N", 100, 100,53,53); break;
-		case 's': keyboard.savemap("newmap.kbd"); break;
+		case 's': keyboard.saveMap("newmap.kbd"); break;
 		case 'w': window.close = !window.close;
 	}
 }
 
-void testApp::virtualKeyPressed(string & letter){
-	cout << letter << endl;
+void testApp::keyboardPressed(string & action){
+	window.objects[window.focusObject]->act += action;
+}
+
+void testApp::windowPressed(string & action){
+	if (action == "CLOSE") window.close = true;
 }
 
 //--------------------------------------------------------------
@@ -93,12 +96,10 @@ void testApp::windowResized(int w, int h){
 }
 
 #ifdef USE_TUIO
-void testApp::tuioAdded(ofxTuioCursor &tuioCursor){
-	
+void testApp::tuioAdded(ofxTuioCursor &tuioCursor){	
 }
 
 void testApp::tuioUpdated(ofxTuioCursor &tuioCursor){
-	
 }
 
 void testApp::tuioRemoved(ofxTuioCursor &tuioCursor){

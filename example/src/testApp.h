@@ -1,11 +1,8 @@
 #ifndef _TEST_APP
 #define _TEST_APP
 
-
 #include "ofMain.h"
-#include "ofxBlackButton.h"
-#include "ofxBlackKeyboard.h"
-#include "ofxBlackWindow.h"
+#include "ofxBlackBox.h"
 
 #define USE_TUIO
 
@@ -15,17 +12,14 @@
 #include "ofxTuio.h"
 #endif
 
-#include "MSACore.h"
-
-using namespace MSA;
-
 class testApp : public ofBaseApp{
 public:
 	ofxBlackWindow		window;
+	void				windowPressed(string & letter);
 	
 	ofxBlackKeyboard	keyboard;
-	void	virtualKeyPressed(string & letter);
-	
+	void				keyboardPressed(string & letter);
+		
 	ofImage fondo;
 		
 	void setup();
