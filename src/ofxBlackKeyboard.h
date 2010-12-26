@@ -32,20 +32,16 @@
 #ifndef _ofxBLACKKEYBOARD
 #define _ofxBLACKKEYBOARD
 
-#include "ofxBlackBox.h"
+#include "ofxBlackWindow.h"
 #include <iostream>
 #include <fstream>
 
-using namespace MSA;
-
-class ofxBlackKeyboard : public ofxBlackBox{
-	
+class ofxBlackKeyboard : public ofxBlackWindow{	
 public:
-			
-	ofxBlackKeyboard();
-	
-	//int				cKey;								// Position on the array of the selected key
+
 	ofEvent<string> keyPressed;
+	
+	ofxBlackKeyboard();
 	
 	// Reading and writting of the layermap files ending with .kbd
 	void loadMap(const string& kbdFile);

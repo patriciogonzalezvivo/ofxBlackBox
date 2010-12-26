@@ -48,12 +48,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
  ***********************************************************************/
-
-
 #ifndef _ofxBLACKTEXT
 #define _ofxBLACKTEXT
 
-#include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
 #include "ofxBlackObject.h"
 
 #include <iomanip>
@@ -63,8 +60,6 @@
 #include <fstream>
 #include <vector>
 #include <iterator>
-
-using namespace MSA;
 
 class wordBlock {
 public:

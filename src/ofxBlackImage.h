@@ -34,10 +34,7 @@
 #ifndef _ofxBLACKIMAGE
 #define _ofxBLACKIMAGE
 
-#include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
 #include "ofxBlackObject.h"
-
-using namespace MSA;
 
 class ofxBlackImage : public ofxBlackObject{	
 public:

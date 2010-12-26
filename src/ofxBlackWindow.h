@@ -28,37 +28,93 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ***********************************************************************/
-
-
 #ifndef _ofxBLACKWINDOW
 #define _ofxBLACKWINDOW
 
-#include "ofMain.h"
+#define USE_TUIO
+#ifdef USE_TUIO
+#define tuioCursorSpeedMult				0.5	// the iphone screen is so small, easy to rack up huge velocities! need to scale down 
+#define tuioStationaryForce				0.001f	// force exerted when cursor is stationary
+#include "ofxTuio.h"
+#endif
+
 #include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
 #include "ofxXmlSettings.h"
+using namespace MSA;
 
-#include "ofxBlackBox.h"
+#include "ofxBlackObject.h"
+#include "ofxBlackVideo.h"
+#include "ofxBlackImage.h"
+#include "ofxBlackText.h"
+#include "ofxBlackTextInput.h"
+#include "ofxBlackButton.h"
 
 #include <vector>
 
-using namespace MSA;
+struct tCursor {
+	int	idN;
+	Vec2f loc;
+};
 
-class ofxBlackWindow : public ofxBlackBox{
+class ofxBlackWindow{
 public:
+	int		timer;
+	float	margen, alpha, delay;//,radio;
+	bool	close;		// Close trigger
 	
-	//bool	close;		// Close trigger
-	float	radio;
-	float	delay;
+	int		focusObject;
+	vector	<ofxBlackObject*>	objects;
 	
-	
+	ofEvent<string> objectPressed;
+		
 	ofxBlackWindow();
-	//----------------- Preferences
+	//----------------------------------------------- SETUP
 	ofxXmlSettings XML;
-	bool	setup(string filePath);
+	void	setup(string filePath){setup(filePath,0);};
+	void	setup(string filePath, int _instance);
+	void	initialWindowSetup();
+	void	loadObject(int _instance);
+	void	autoVerticalArrange();
 	
-	//------------------ Actions
+	//------------------------------------------------ RENDER
+	Vec2f	position;
+	void	setPosition(int _x, int _y){position.x = _x; position.y = _y;};
+	
+	float	width,height;
+	void	setSize(float _width, float _height){width = _width; height = _height;};
+	
+	Color	foreground, background;
+	
+	ofTrueTypeFont defaultFont;
+	void	setFont(string fontLocation, int fontSize ){ defaultFont.loadFont(fontLocation, fontSize, true, true);};
+	
+	float	angle, scale;
+	void	rotate(float _angle){ angle += _angle;};
+	void	resize(float _resize);
+	
 	void	update();
-	//void	draw();
+	void	draw();
+	void	rBox();
+	
+	//------------------------------------------------ ACTIONS
+	bool	isOver(int _x, int _y);
+	bool	isOver(Vec2f _loc){isOver(_loc.x,_loc.y);};
+	
+	bool	checkObjects(Vec2f _loc);
+	bool	checkObjects(int _x, int _y){checkObjects(Vec2f(_x,_y));};
+	
+	//------------------------------------------------ MULTITOUCH (TUIO) 
+#ifdef USE_TUIO
+	myTuioClient * tuioClient;
+	void	setTuioClient (myTuioClient * _tuioClient);
+	
+	vector<tCursor>	cursorsOnBorder;
+	Vec2f	oldLoc[3];
+	
+	void	tuioAdded(ofxTuioCursor & tuioCursor);
+	void	tuioRemoved(ofxTuioCursor & tuioCursor);
+	void	tuioUpdated(ofxTuioCursor & tuioCursor);
+#endif
 };
 
 #endif

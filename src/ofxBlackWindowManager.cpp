@@ -1,7 +1,8 @@
 /*
- *  ofxBlackBox.h
+ *  ofxBlackWindowManager.cpp
+ *  ofxBlackBoxExample
  *
- *  Copyright 2010 Patricio Gonzalez Vivo http://www.patriciogonzalezvivo.com
+ *  Created by Patricio González Vivo on 25/12/10.
  *	All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +30,59 @@
  *
  * ***********************************************************************/
 
-#ifndef _ofxBLACKBOX
-#define _ofxBLACKBOX
-
-#include "ofMain.h"
-
-#include "ofxBlackWindow.h"
 #include "ofxBlackWindowManager.h"
 
+ofxBlackWindowManager::ofxBlackWindowManager(){
+	windows.clear();
+}
+
+void ofxBlackWindowManager::loadSetup(string filePath){
+	if (XML.loadFile(filePath)){
+		
+		for(int i = 0; i < XML.getNumTags("WINDOW");i++){
+			ofxBlackWindow * w = new ofxBlackWindow();
+			w->setup(filePath, i);
+			windows.push_back(w);
+		}
+	
+		if (XML.tagExists("KEYBOARD",0)){
+			XML.pushTag("KEYBOARD",0);
+			if (XML.tagExists("PATH",0)){
+				keyboard.loadMap(XML.getValue("PATH","mac.kbd"));
+				keyboard.setFont(XML.getValue("FONT","helvetica.ttf"),XML.getValue("FONT_SIZE",13));
+				keyboard.alpha = 200;
+			}
+			XML.popTag();
+		}
+		
+		for(int i = 0; i < windows.size() ;i++)
+			ofAddListener(windows[i]->objectPressed,this,&ofxBlackWindowManager::windowAction);
+		
+		ofAddListener(keyboard.objectPressed,this,&ofxBlackWindowManager::keyboardAction);
+		
+#ifdef USE_TUIO
+		for(int i = 0; i < windows.size() ;i++)
+			windows[i]->setTuioClient(tuioClient);
+		
+		keyboard.setTuioClient(tuioClient);
 #endif
+	}
+}
+
+void ofxBlackWindowManager::update(){
+	for(int i = 0; i < windows.size() ;i++)
+		windows[i]->update();
+}
+
+void ofxBlackWindowManager::draw(){
+	for(int i = 0; i < windows.size() ;i++)
+		windows[i]->draw();
+}
+
+void ofxBlackWindowManager::windowAction(string & _action){
+	//if (_action == "CLOSE") window[ ].close = true;
+}
+	
+void ofxBlackWindowManager::keyboardAction(string & _action){
+	//window[ ].objects[window[ ].focusObject]->act += action;
+}

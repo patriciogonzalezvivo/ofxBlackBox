@@ -28,14 +28,10 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ***********************************************************************/
-
 #ifndef _ofxBLACKBUTTON
 #define _ofxBLACKBUTTON
 
-#include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
 #include "ofxBlackObject.h"
-
-using namespace MSA;
 
 class ofxBlackButton : public ofxBlackObject{	
 public:

@@ -1,7 +1,8 @@
 /*
- *  ofxBlackBox.h
+ *  ofxBlackWindowManager.h
+ *  ofxBlackBoxExample
  *
- *  Copyright 2010 Patricio Gonzalez Vivo http://www.patriciogonzalezvivo.com
+ *  Created by Patricio González Vivo on 25/12/10.
  *	All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +30,38 @@
  *
  * ***********************************************************************/
 
-#ifndef _ofxBLACKBOX
-#define _ofxBLACKBOX
-
-#include "ofMain.h"
-
 #include "ofxBlackWindow.h"
-#include "ofxBlackWindowManager.h"
+#include "ofxBlackKeyboard.h"
 
+#define USE_TUIO
+
+#ifdef USE_TUIO
+#define tuioCursorSpeedMult				0.5	// the iphone screen is so small, easy to rack up huge velocities! need to scale down 
+#define tuioStationaryForce				0.001f	// force exerted when cursor is stationary
+#include "ofxTuio.h"
 #endif
+
+#include <vector>
+
+class ofxBlackWindowManager{
+public:
+	ofxXmlSettings XML;
+	vector <ofxBlackWindow*>	windows;
+	ofxBlackKeyboard			keyboard;
+	
+	ofEvent<string> somethingPressed;
+	
+	ofxBlackWindowManager();
+	
+#ifdef USE_TUIO
+	myTuioClient *	tuioClient;
+	void			setTuioClient (myTuioClient * _tuioClient){tuioClient = _tuioClient;};
+#endif
+	
+	void			loadSetup(string _filePath);
+	void			windowAction(string & _action);
+	void			keyboardAction(string & _action);
+	
+	void			update();
+	void			draw();
+};
