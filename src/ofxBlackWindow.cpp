@@ -36,7 +36,7 @@ ofxBlackWindow::ofxBlackWindow(){
 	alpha	= 0;
 	angle	= 0;
 	
-	position = Vec2f(0,0);
+	position = ofxVec2f(0,0);
 	
 	width	= 500;
 	height	= 50;
@@ -47,8 +47,13 @@ ofxBlackWindow::ofxBlackWindow(){
 	
 	scale	= 1;
 	
-	background.set(CM_RGB,Vec3f(0,0,0));
-	foreground.set(CM_RGB,Vec3f(255,255,255));
+	background.r = 0;
+	background.g = 0;
+	background.b = 0;
+	
+	foreground.r = 255;
+	foreground.g = 255;
+	foreground.b = 255;
 }
 
 //------------------------------------------------------------ SETUP
@@ -66,7 +71,7 @@ void ofxBlackWindow::initialWindowSetup(){
 	bool success = true;
 	
 	// INITIAL VARIABLES
-	position		= Vec2f(XML.getValue("X",0),XML.getValue("Y",0));
+	position		= ofxVec2f(XML.getValue("X",0),XML.getValue("Y",0));
 	width			= XML.getValue("WIDTH",500);
 	height			= XML.getValue("HEIGHT",0);
 	margen			= XML.getValue("MARGEN",20);
@@ -75,8 +80,15 @@ void ofxBlackWindow::initialWindowSetup(){
 	delay			= XML.getValue("DELAY",0);
 	close			= XML.getValue("CLOSE",0);
 	alpha			= XML.getValue("ALPHA",0);
-	background.set(CM_RGB,Vec3f(XML.getValue("BACKGROUND:RED", 0),XML.getValue("BACKGROUND:GREEN", 0),XML.getValue("BACKGROUND:BLUE", 0)));
-	foreground.set(CM_RGB,Vec3f(XML.getValue("FOREGROUND:RED", 255),XML.getValue("FOREGROUND:GREEN", 255),XML.getValue("FOREGROUND:BLUE", 255)));
+	
+	background.r = XML.getValue("BACKGROUND:RED", 0);
+	background.g = XML.getValue("BACKGROUND:GREEN", 0);
+	background.b = XML.getValue("BACKGROUND:BLUE", 0);
+	
+	foreground.r = XML.getValue("FOREGROUND:RED", 255);
+	foreground.g = XML.getValue("FOREGROUND:GREEN", 255);
+	foreground.b = XML.getValue("FOREGROUND:BLUE", 255);
+	
 	setFont(XML.getValue("FONT:PATH","helvetica.ttf"), XML.getValue("FONT:SIZE",10));
 	
 	// ------------------------------------------- OBJECTS LOADING
@@ -353,7 +365,7 @@ bool ofxBlackWindow::isOver(int _x , int _y){
 	} else return false;
 }
 
-bool ofxBlackWindow::checkObjects(Vec2f _loc){
+bool ofxBlackWindow::checkObjects(ofxVec2f _loc){
 	bool pressed = false;
 	
 	if (isOver(_loc))
@@ -379,7 +391,7 @@ void ofxBlackWindow::setTuioClient (myTuioClient * _tuioClient){
 }
 
 void ofxBlackWindow::tuioAdded(ofxTuioCursor &tuioCursor){
-	Vec2f loc = Vec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+	ofxVec2f loc = ofxVec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
 	
 	if (isOver(loc)){
 		timer = 1;
@@ -405,7 +417,7 @@ void ofxBlackWindow::tuioUpdated(ofxTuioCursor &tuioCursor){
 	// First it will update the information of the fingers that are over the border
 	for ( int i = 0; i < cursorsOnBorder.size(); i++)
 		if (cursorsOnBorder[i].idN == tuioCursor.getSessionId())
-			cursorsOnBorder[i].loc = Vec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+			cursorsOnBorder[i].loc = ofxVec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
 	
 	// Then check if there is two fingers over it
 	if (cursorsOnBorder.size() == 2){
@@ -419,8 +431,8 @@ void ofxBlackWindow::tuioUpdated(ofxTuioCursor &tuioCursor){
 		
 		// If one it´s the dinamic and the other one the static it´s all OK and it´s time to calculate new parameters
 		if ((sta != -1) && (din != -1) && (din != sta)){
-			Vec2f Di = oldLoc[sta] - oldLoc[din];		// Get Vector between OLD finger position
-			Vec2f Dii = oldLoc[sta] - cursorsOnBorder[din].loc; // Get Vector between NEW finger position
+			ofxVec2f Di = oldLoc[sta] - oldLoc[din];		// Get Vector between OLD finger position
+			ofxVec2f Dii = oldLoc[sta] - cursorsOnBorder[din].loc; // Get Vector between NEW finger position
 			
 			float di = Di.length();						// Get OLD finger distance
 			float dii = Dii.length();					// Get NEW finger distance
@@ -432,13 +444,13 @@ void ofxBlackWindow::tuioUpdated(ofxTuioCursor &tuioCursor){
 			
 			float rotateF = rii - ri;					// Set the angle diference before and after
 			
-			Vec2f oldStaCursorToCenter = position - oldLoc[sta] ;	// Get the OLD vector from the static finger to the center of the keyboard
+			ofxVec2f oldStaCursorToCenter = position - oldLoc[sta] ;	// Get the OLD vector from the static finger to the center of the keyboard
 			float oldAngleToCenter = -1*atan2(oldStaCursorToCenter.x,oldStaCursorToCenter.y)+(PI/2);	// Get OLD Angle to the center 
 			float oldRadioToCenter = oldStaCursorToCenter.length();		// Get the OLD distance from the static figer to the center
 			
 			float newRadioToCenter = oldRadioToCenter * scaleF;		// Set the NEW distance to the center
 			float newAngleToCenter = oldAngleToCenter + rotateF;	// Set the NEW angle to the center
-			Vec2f newStaCursorToCenter = Vec2f(newRadioToCenter*cos(newAngleToCenter),newRadioToCenter*sin(newAngleToCenter)); // Set the NEW vector from the static finger to the center of the keyboard
+			ofxVec2f newStaCursorToCenter = ofxVec2f(newRadioToCenter*cos(newAngleToCenter),newRadioToCenter*sin(newAngleToCenter)); // Set the NEW vector from the static finger to the center of the keyboard
 			
 			resize(scaleF);											// RESIZE the scale diference proportion
 			rotate(rotateF);										// ROTATE the diference in angle
@@ -451,7 +463,7 @@ void ofxBlackWindow::tuioUpdated(ofxTuioCursor &tuioCursor){
 }
 
 void ofxBlackWindow::tuioRemoved(ofxTuioCursor &tuioCursor){
-	Vec2f loc = Vec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+	ofxVec2f loc = ofxVec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
 	
 	for (int i = 0; i < cursorsOnBorder.size(); i++ )
 		if (cursorsOnBorder[i].idN == tuioCursor.getSessionId())

@@ -446,7 +446,7 @@ void ofxBlackText::setLineHeight(float lineHeight){
     defaultFont->setLineHeight(lineHeight);
 }
 
-void ofxBlackText::setColor(Color c){
+void ofxBlackText::setColor(ofColor c){
     ofColor tmpColor;
 	
     tmpColor.r = c.r;

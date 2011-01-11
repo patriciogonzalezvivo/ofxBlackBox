@@ -38,9 +38,8 @@
 #include "ofxTuio.h"
 #endif
 
-#include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
+#include "ofxVec2f.h"					//ofxVectorMath addon 
 #include "ofxXmlSettings.h"
-using namespace MSA;
 
 #include "ofxBlackObject.h"
 #include "ofxBlackVideo.h"
@@ -53,7 +52,7 @@ using namespace MSA;
 
 struct tCursor {
 	int	idN;
-	Vec2f loc;
+	ofxVec2f loc;
 };
 
 class ofxBlackWindow{
@@ -77,13 +76,13 @@ public:
 	void	autoVerticalArrange();
 	
 	//------------------------------------------------ RENDER
-	Vec2f	position;
+	ofxVec2f	position;
 	void	setPosition(int _x, int _y){position.x = _x; position.y = _y;};
 	
 	float	width,height;
 	void	setSize(float _width, float _height){width = _width; height = _height;};
 	
-	Color	foreground, background;
+	ofColor	foreground, background;
 	
 	ofTrueTypeFont defaultFont;
 	void	setFont(string fontLocation, int fontSize ){ defaultFont.loadFont(fontLocation, fontSize, true, true);};
@@ -98,10 +97,10 @@ public:
 	
 	//------------------------------------------------ ACTIONS
 	bool	isOver(int _x, int _y);
-	bool	isOver(Vec2f _loc){isOver(_loc.x,_loc.y);};
+	bool	isOver(ofxVec2f _loc){isOver(_loc.x,_loc.y);};
 	
-	bool	checkObjects(Vec2f _loc);
-	bool	checkObjects(int _x, int _y){checkObjects(Vec2f(_x,_y));};
+	bool	checkObjects(ofxVec2f _loc);
+	bool	checkObjects(int _x, int _y){checkObjects(ofxVec2f(_x,_y));};
 	
 	//------------------------------------------------ MULTITOUCH (TUIO) 
 #ifdef USE_TUIO
@@ -109,7 +108,7 @@ public:
 	void	setTuioClient (myTuioClient * _tuioClient);
 	
 	vector<tCursor>	cursorsOnBorder;
-	Vec2f	oldLoc[3];
+	ofxVec2f	oldLoc[3];
 	
 	void	tuioAdded(ofxTuioCursor & tuioCursor);
 	void	tuioRemoved(ofxTuioCursor & tuioCursor);

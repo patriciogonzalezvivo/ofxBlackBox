@@ -36,7 +36,7 @@ ofxBlackKeyboard::ofxBlackKeyboard(){
 	alpha	= 255;
 	angle	= 0;
 	
-	position = Vec2f(ofGetWidth()*0.5,ofGetHeight()*0.5);
+	position = ofxVec2f(ofGetWidth()*0.5,ofGetHeight()*0.5);
 	
 	width	= 500;
 	height	= 50;
@@ -45,8 +45,13 @@ ofxBlackKeyboard::ofxBlackKeyboard(){
 	timer	= 0;
 	scale	= 1;
 	
-	background.set(CM_RGB,Vec3f(0,0,0));
-	foreground.set(CM_RGB,Vec3f(255,255,255));
+	background.r = 0;
+	background.g = 0;
+	background.b = 0;
+	
+	foreground.r = 255;
+	foreground.g = 255;
+	foreground.b = 255;
 }
 
 void ofxBlackKeyboard::loadMap(const string& path){
@@ -123,7 +128,7 @@ void ofxBlackKeyboard::saveMap(const string& path){
 	fs.close();
 }
 
-bool ofxBlackKeyboard::isOnBorder(Vec2f _loc){
+bool ofxBlackKeyboard::isOnBorder(ofxVec2f _loc){
 	float dist = position.distance(_loc);
 	
 	if ( (dist <= width*0.5) && (dist >= width*0.4)) return true;

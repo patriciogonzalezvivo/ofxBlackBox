@@ -33,9 +33,8 @@
 #ifndef _ofxBLACKOBJECT
 #define _ofxBLACKOBJECT
 
-#include "MSACore.h"			//  Using MSACore addon made by Memo Akten, www.memo.tv
-
-using namespace MSA;
+#include "ofMain.h"
+#include "ofxVec2f.h"			//  ofxVectorMath addon
 
 class ofxBlackObject{	
 public:
@@ -47,15 +46,15 @@ public:
 	float * scale;
 	void	setScale(float * _scale){scale = _scale;};
 	
-	Vec2f * windowCenter;
-	void	setWindowCenter(Vec2f * _windowCenter){windowCenter = _windowCenter;};
+	ofxVec2f * windowCenter;
+	void	setWindowCenter(ofxVec2f * _windowCenter){windowCenter = _windowCenter;};
 	
 	float * windowNorth;
 	void	setWindowNorth(float * _windowNorth){windowNorth = _windowNorth;};
 	
-	Color * foreground;
-	Color * background;
-	void	setColors(Color * _foreground, Color * _background){ foreground = _foreground; background = _background;};
+	ofColor * foreground;
+	ofColor * background;
+	void	setColors(ofColor * _foreground, ofColor * _background){ foreground = _foreground; background = _background;};
 	
 	float * alpha;
 	void	setAlpha(float * _alpha){alpha = _alpha;};
@@ -68,15 +67,15 @@ public:
 	//	Don´t mess with them unless you want to make your own boards.
 	float	radio;
 	void	setRadio(float _radio){radio = _radio;};
-	void	setRadio(Vec2f _position){	radio = _position.distance(*windowCenter);};
+	void	setRadio(ofxVec2f _position){	radio = _position.distance(*windowCenter);};
 	
 	float	angle;
 	void	setAngle(float _angle){angle = _angle;};
-	void	setAngle(Vec2f _position){ _position -= *windowCenter; angle = ( (-1*atan2(_position.x,_position.y)+(PI/2) - *windowNorth)); };
+	void	setAngle(ofxVec2f _position){ _position -= *windowCenter; angle = ( (-1*atan2(_position.x,_position.y)+(PI/2) - *windowNorth)); };
 	
-	Vec2f	position;			// Cartesian Position (x,y)
-	void	moveTo(int _x, int _y){moveTo(Vec2f(_x,_y));};
-	void	moveTo(Vec2f _location){ setRadio(_location); setAngle(_location); };
+	ofxVec2f	position;			// Cartesian Position (x,y)
+	void	moveTo(int _x, int _y){moveTo(ofxVec2f(_x,_y));};
+	void	moveTo(ofxVec2f _location){ setRadio(_location); setAngle(_location); };
 	
 	void	reCalcPos();	// Recalculate the position and angle of the object from the center and rotation of the windows
 	
@@ -87,8 +86,8 @@ public:
 	
 	// Checkers. someday this will become events
 	bool over;
-	bool isOver(Vec2f _location);
-	bool isOver(int _x, int _y){isOver(Vec2f(_x,_y));};
+	bool isOver(ofxVec2f _location);
+	bool isOver(int _x, int _y){isOver(ofxVec2f(_x,_y));};
 };
 
 #endif

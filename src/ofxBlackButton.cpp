@@ -38,7 +38,7 @@ ofxBlackButton::ofxBlackButton(){
 void ofxBlackButton::draw(){
 	reCalcPos();
 	
-	Color fg,bg;
+	ofColor fg,bg;
 	
 	if (over) {
 		fg = *background;

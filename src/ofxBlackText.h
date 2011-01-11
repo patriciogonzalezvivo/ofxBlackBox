@@ -109,7 +109,7 @@ public:
 	
 	TextBlockAlignment  alignment;
 	void				setAligment(TextBlockAlignment a){alignment = a;};
-	void				setColor(Color c);
+	void				setColor(ofColor c);
 	
 	void				draw();
 	
