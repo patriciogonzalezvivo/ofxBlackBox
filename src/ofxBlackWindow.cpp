@@ -402,9 +402,9 @@ bool ofxBlackWindow::checkObjects(ofVec2f _loc){
 	if (isOver(_loc))
 		for(int i = 0; i< objects.size(); i++)
 			if (objects[i]->isOver(_loc)){
-				ofNotifyEvent(objectPressed, objects[i]->act,this);
 				focusObject = i;
 				pressed = true;
+				ofNotifyEvent(objectPressed, objects[i]->act,this);
 			}
 	
 	return pressed;
