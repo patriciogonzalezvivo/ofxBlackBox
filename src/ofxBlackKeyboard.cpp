@@ -36,7 +36,7 @@ ofxBlackKeyboard::ofxBlackKeyboard(){
 	alpha	= 255;
 	angle	= 0;
 	
-	position = ofxVec2f(ofGetWidth()*0.5,ofGetHeight()*0.5);
+	position = ofVec2f(ofGetWidth()*0.5,ofGetHeight()*0.5);
 	
 	width	= 500;
 	height	= 50;
@@ -128,7 +128,7 @@ void ofxBlackKeyboard::saveMap(const string& path){
 	fs.close();
 }
 
-bool ofxBlackKeyboard::isOnBorder(ofxVec2f _loc){
+bool ofxBlackKeyboard::isOnBorder(ofVec2f _loc){
 	float dist = position.distance(_loc);
 	
 	if ( (dist <= width*0.5) && (dist >= width*0.4)) return true;

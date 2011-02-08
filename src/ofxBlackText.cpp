@@ -33,12 +33,11 @@
 #include "ofxBlackText.h"
 
 ofxBlackText::ofxBlackText(){
-	scaleWrap = 1;
 }
 
 
 void ofxBlackText::loadFont(string fontLocation, float fontSize){
-	font.loadFont(fontLocation, fontSize, true, true);
+	font.loadFont(fontLocation, fontSize);
 	setFont(&font);
 }
 
@@ -64,10 +63,6 @@ void ofxBlackText::loadTextFrom(const string& path){
 		while(!(fs >> palabra).fail())
 			palabras.push_back(palabra);
 		fs.close();
-		
-		// Formatea la lista de palabras en un vector de lineas que entren el el width seteado
-		//text.clear();			// borra el contenido viejo
-		//string tempText = "";
 		
 		wordBlock tmpWord;
 		for (int i = 0; i < palabras.size(); i++){
@@ -129,27 +124,25 @@ void ofxBlackText::draw(){
 	
 	ofPushMatrix();
 		ofTranslate(position.x, position.y);
-		//ofRotateZ(ofRadToDeg(angle));
 		ofRotateZ(ofRadToDeg(*windowNorth));
 		ofScale(*scale,*scale,1);	
 		//Dibuja cada linea de texto
 		ofFill();
-		//setTextColor(foreground->r,foreground->g,foreground->b);
 		switch (alignment) {
 			case OF_TEXT_ALIGN_LEFT:
-				drawTextLeft(-width*0.5,-height*0.5); //-height*0.5);
+				drawTextLeft(-width*0.5,-height*0.5);
 				break;
 			case OF_TEXT_ALIGN_RIGHT:
-				drawTextRight(width*0.5,-height*0.5); //-height*0.5);
+				drawTextRight(width*0.5,-height*0.5);
 				break;
 			case OF_TEXT_ALIGN_CENTER:
-				drawTextCenter(0, -height*0.5);//-height*0.5);
+				drawTextCenter(0, -height*0.5);
 				break;
 			case OF_TEXT_ALIGN_JUSTIFIED:
-				drawTextJustified(-width*0.5,-height*0.5,getTextWidth()*0.5);//-height*0.5, getTextWidth()*0.5);
+				drawTextJustified(-width*0.5,-height*0.5,getTextWidth()*0.5);
 				break;
 			default:
-				drawTextJustified(-width*0.5,-height*0.5,getTextWidth()*0.5);//-height*0.5, getTextWidth()*0.5);
+				drawTextJustified(-width*0.5,-height*0.5,getTextWidth()*0.5);
 		}
 	ofPopMatrix();
 }
@@ -172,12 +165,11 @@ void ofxBlackText::drawTextLeft(float _x, float _y){
                 drawY = _y + (defaultFont->getLineHeight() * (l + 1));
 				
                 ofSetColor(words[currentWordID].color.r, words[currentWordID].color.g, words[currentWordID].color.b,*alpha);
-                glPushMatrix();
+                ofPushMatrix();
 					//glTranslatef(drawX, drawY, 0.0f);
-					glScalef(scaleWrap, scaleWrap, scaleWrap);
 					defaultFont->drawString(words[currentWordID].rawWord.c_str(), drawX, drawY);
 					currX += words[currentWordID].width;
-                glPopMatrix();
+                ofPopMatrix();
             }
             currX = 0;
         }
@@ -210,14 +202,12 @@ void ofxBlackText::drawTextCenter(float _x, float _y){
 				
                 ofSetColor(words[currentWordID].color.r, words[currentWordID].color.g, words[currentWordID].color.b,*alpha);
 				
-                glPushMatrix();
+                ofPushMatrix();
 					//Move to central point using pre-scaled co-ordinates
-					glTranslatef(_x, _y, 0.0f);
-					glScalef(scaleWrap, scaleWrap, scaleWrap);
-				
+					ofTranslate(_x, _y, 0.0f);
 					defaultFont->drawString(words[currentWordID].rawWord.c_str(), drawX, drawY);
 					currX += words[currentWordID].width;
-                glPopMatrix();
+                ofPopMatrix();
             }
             currX = 0;
         }
@@ -243,16 +233,14 @@ void ofxBlackText::drawTextRight(float _x, float _y){
 				
                 ofSetColor(words[currentWordID].color.r, words[currentWordID].color.g, words[currentWordID].color.b,*alpha);
 				
-                glPushMatrix();
-				
+                ofPushMatrix();
                 //Move to top left point using pre-scaled co-ordinates
-					glTranslatef(_x, _y, 0.0f);
-					glScalef(scaleWrap, scaleWrap, scaleWrap);
-				
+					ofTranslate(_x, _y, 0.0f);
+					//glScalef(scaleWrap, scaleWrap, scaleWrap);
 					defaultFont->drawString(words[currentWordID].rawWord.c_str(), drawX, drawY);
 					currX += words[currentWordID].width;
 				
-                glPopMatrix();
+                ofPopMatrix();
             }
             currX = 0;
         }
@@ -283,8 +271,8 @@ void ofxBlackText::drawTextJustified(float _x, float _y, float boxWidth){
                 else nonSpaceWordWidth += words[currentWordID].width;
             }
 				
-			pixelsPerSpace = ((boxWidth / scaleWrap) - (_x / scaleWrap) - nonSpaceWordWidth) / spacesN;
-				
+			pixelsPerSpace = (boxWidth - _x - nonSpaceWordWidth) / spacesN;
+			
 			for(int w=0;w < lines[l].wordsID.size(); w++){
 				currentWordID = lines[l].wordsID[w];
 				
@@ -292,14 +280,14 @@ void ofxBlackText::drawTextJustified(float _x, float _y, float boxWidth){
 				drawY = defaultFont->getLineHeight() * (l + 1);
 				
 				ofSetColor(words[currentWordID].color.r, words[currentWordID].color.g, words[currentWordID].color.b,*alpha);
-				glPushMatrix();
+				ofPushMatrix();
 				//Move to top left point using pre-scaled co-ordinates
-					glTranslatef(_x, _y, 0.0f);
-					glScalef(scaleWrap, scaleWrap, scaleWrap);
+					ofTranslate(_x, _y, 0.0f);
 				
-					if ((nonSpaceWordWidth)*scaleWrap > boxWidth*1.3){
+					if (nonSpaceWordWidth > boxWidth*1.3){
 						if (words[currentWordID].rawWord != " ") {
-							defaultFont->drawString(words[currentWordID].rawWord.c_str(), drawX, drawY);
+							//defaultFont->drawString(words[currentWordID].rawWord.c_str(), drawX, drawY);
+							defaultFont->drawString(words[currentWordID].rawWord, drawX, drawY);
 							currX += words[currentWordID].width;
 						} else currX += pixelsPerSpace;
 					} else {
@@ -307,7 +295,7 @@ void ofxBlackText::drawTextJustified(float _x, float _y, float boxWidth){
 						currX += words[currentWordID].width;
 					}
 					
-					glPopMatrix();
+				ofPopMatrix();
 				}
             currX = 0;
         }
@@ -333,8 +321,6 @@ bool ofxBlackText::wrapTextForceLines(int linesN){
 }
 
 int ofxBlackText::wrapTextX(float lineWidth){
-    scaleWrap = 1.0f;
-	
     if (words.size() > 0) {
         float   runningWidth = 0.0f;
         lines.clear();
@@ -370,7 +356,7 @@ void ofxBlackText::wrapTextArea(float rWidth, float rHeight){
     float tmpScale = 0.0f;
     float maxIterations = _getLinedWords();
     float scales[1000];
-    scaleWrap = 1.0f;  //Reset the scale for the height and width calculations.
+    //scaleWrap = 1.0f;  //Reset the scale for the height and width calculations.
 	
     if (words.size() > 0) {
         //Check each possible line layout and check it will fit vertically
@@ -400,17 +386,17 @@ void ofxBlackText::wrapTextArea(float rWidth, float rHeight){
         }
 		
         //When only one line is needed an appropriate on the Y scale can sometimes not be found.  In these occasions scale the size to the Y dimension
-        if (bScaleAvailable) {
+        /*if (bScaleAvailable) {
             scaleWrap = scales[maxIndex];
         } else {
             scaleWrap = (float)rHeight / (float)getTextHeight();
-        }
+        }*/
 		
-        float persistScale = scaleWrap; //Need to persist the scale as the wrapTextForceLines will overwrite.
+        //float persistScale = scaleWrap; //Need to persist the scale as the wrapTextForceLines will overwrite.
         wrapTextForceLines(maxIndex);
-        scaleWrap = persistScale;
+        //scaleWrap = persistScale;
 		
-        ofLog(OF_LOG_VERBOSE,"Scaling with %i at scale %f...\n", maxIndex, scaleWrap);
+        //ofLog(OF_LOG_VERBOSE,"Scaling with %i at scale %f...\n", maxIndex, scaleWrap);
     }
 }
 
@@ -429,14 +415,15 @@ float ofxBlackText::getTextWidth(){
             maxWidth = MAX(maxWidth, currX);
             currX = 0.0f;
         }
-        return maxWidth * scaleWrap;
+        return maxWidth;// * scaleWrap;
     }
     else return 0;
 }
 
 float ofxBlackText::getTextHeight(){
     if (words.size() > 0) {
-        return defaultFont->getLineHeight() * scaleWrap * lines.size();
+        //return defaultFont->getLineHeight() * scaleWrap * lines.size();
+		return defaultFont->getLineHeight() * lines.size();
     }
     else return 0;
 }
@@ -457,10 +444,6 @@ void ofxBlackText::setColor(ofColor c){
         for(int i=0;i < words.size(); i++)
 			words[i].color = tmpColor;
     }
-}
-
-void ofxBlackText::forceTextScale(float _scaleWrap){
-    scaleWrap = _scaleWrap;
 }
 
 //----------------------------------------------- Protected

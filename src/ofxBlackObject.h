@@ -34,7 +34,6 @@
 #define _ofxBLACKOBJECT
 
 #include "ofMain.h"
-#include "ofxVec2f.h"			//  ofxVectorMath addon
 
 class ofxBlackObject{	
 public:
@@ -46,8 +45,8 @@ public:
 	float * scale;
 	void	setScale(float * _scale){scale = _scale;};
 	
-	ofxVec2f * windowCenter;
-	void	setWindowCenter(ofxVec2f * _windowCenter){windowCenter = _windowCenter;};
+	ofVec2f * windowCenter;
+	void	setWindowCenter(ofVec2f * _windowCenter){windowCenter = _windowCenter;};
 	
 	float * windowNorth;
 	void	setWindowNorth(float * _windowNorth){windowNorth = _windowNorth;};
@@ -67,15 +66,15 @@ public:
 	//	Don´t mess with them unless you want to make your own boards.
 	float	radio;
 	void	setRadio(float _radio){radio = _radio;};
-	void	setRadio(ofxVec2f _position){	radio = _position.distance(*windowCenter);};
+	void	setRadio(ofVec2f _position){	radio = _position.distance(*windowCenter);};
 	
 	float	angle;
 	void	setAngle(float _angle){angle = _angle;};
-	void	setAngle(ofxVec2f _position){ _position -= *windowCenter; angle = ( (-1*atan2(_position.x,_position.y)+(PI/2) - *windowNorth)); };
+	void	setAngle(ofVec2f _position){ _position -= *windowCenter; angle = ( (-1*atan2(_position.x,_position.y)+(PI/2) - *windowNorth)); };
 	
-	ofxVec2f	position;			// Cartesian Position (x,y)
-	void	moveTo(int _x, int _y){moveTo(ofxVec2f(_x,_y));};
-	void	moveTo(ofxVec2f _location){ setRadio(_location); setAngle(_location); };
+	ofVec2f	position;			// Cartesian Position (x,y)
+	void	moveTo(int _x, int _y){moveTo(ofVec2f(_x,_y));};
+	void	moveTo(ofVec2f _location){ setRadio(_location); setAngle(_location); };
 	
 	void	reCalcPos();	// Recalculate the position and angle of the object from the center and rotation of the windows
 	
@@ -86,8 +85,8 @@ public:
 	
 	// Checkers. someday this will become events
 	bool over;
-	bool isOver(ofxVec2f _location);
-	bool isOver(int _x, int _y){isOver(ofxVec2f(_x,_y));};
+	bool isOver(ofVec2f _location);
+	bool isOver(int _x, int _y){isOver(ofVec2f(_x,_y));};
 };
 
 #endif

@@ -85,8 +85,6 @@ enum TextBlockAlignment { OF_TEXT_ALIGN_LEFT, OF_TEXT_ALIGN_RIGHT, OF_TEXT_ALIGN
 class ofxBlackText: public ofxBlackObject{
 public:	
 	ofxBlackText();	
-	
-	float				scaleWrap;
 	wordBlock			blankSpaceWord;
 	
 	ofTrueTypeFont		font;
@@ -105,7 +103,6 @@ public:
 	void				setLineHeight(float lineHeight);
 	float				getTextWidth();
 	float				getTextHeight();
-	void				forceTextScale(float _scale);
 	
 	TextBlockAlignment  alignment;
 	void				setAligment(TextBlockAlignment a){alignment = a;};

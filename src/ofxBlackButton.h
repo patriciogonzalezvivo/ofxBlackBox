@@ -36,11 +36,15 @@
 class ofxBlackButton : public ofxBlackObject{	
 public:
 	
+	ofColor * color;
+	
 	// Contructors
 	ofxBlackButton();
 	
 	string letter;
 	void setLetter(string l){letter = l;};
+	
+	void setIndependentColor(){ background = color;};
 	
 	void draw();						// First update. Then draw.
 	

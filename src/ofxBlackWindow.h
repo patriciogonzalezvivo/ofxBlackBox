@@ -38,7 +38,6 @@
 #include "ofxTuio.h"
 #endif
 
-#include "ofxVec2f.h"					//ofxVectorMath addon 
 #include "ofxXmlSettings.h"
 
 #include "ofxBlackObject.h"
@@ -52,7 +51,7 @@
 
 struct tCursor {
 	int	idN;
-	ofxVec2f loc;
+	ofVec2f loc;
 };
 
 class ofxBlackWindow{
@@ -76,7 +75,7 @@ public:
 	void	autoVerticalArrange();
 	
 	//------------------------------------------------ RENDER
-	ofxVec2f	position;
+	ofVec2f	position;
 	void	setPosition(int _x, int _y){position.x = _x; position.y = _y;};
 	
 	float	width,height;
@@ -85,7 +84,7 @@ public:
 	ofColor	foreground, background;
 	
 	ofTrueTypeFont defaultFont;
-	void	setFont(string fontLocation, int fontSize ){ defaultFont.loadFont(fontLocation, fontSize, true, true);};
+	void	setFont(string fontLocation, int fontSize ){ defaultFont.loadFont(fontLocation, fontSize);};
 	
 	float	angle, scale;
 	void	rotate(float _angle){ angle += _angle;};
@@ -97,10 +96,10 @@ public:
 	
 	//------------------------------------------------ ACTIONS
 	bool	isOver(int _x, int _y);
-	bool	isOver(ofxVec2f _loc){isOver(_loc.x,_loc.y);};
+	bool	isOver(ofVec2f _loc){isOver(_loc.x,_loc.y);};
 	
-	bool	checkObjects(ofxVec2f _loc);
-	bool	checkObjects(int _x, int _y){checkObjects(ofxVec2f(_x,_y));};
+	bool	checkObjects(ofVec2f _loc);
+	bool	checkObjects(int _x, int _y){checkObjects(ofVec2f(_x,_y));};
 	
 	//------------------------------------------------ MULTITOUCH (TUIO) 
 #ifdef USE_TUIO
@@ -108,7 +107,7 @@ public:
 	void	setTuioClient (myTuioClient * _tuioClient);
 	
 	vector<tCursor>	cursorsOnBorder;
-	ofxVec2f	oldLoc[3];
+	ofVec2f	oldLoc[3];
 	
 	void	tuioAdded(ofxTuioCursor & tuioCursor);
 	void	tuioRemoved(ofxTuioCursor & tuioCursor);

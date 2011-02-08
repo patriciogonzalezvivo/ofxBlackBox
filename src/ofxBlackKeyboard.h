@@ -52,7 +52,7 @@ public:
 	void moveKeyTo(int _indexKey, int _x, int _y ){ objects[_indexKey]->moveTo(_x,_y); };	// Pass the cartesian x and y cordinates of the screen
 	//void moveCurrentKeyTo(int _x, int _y ){ objects[cKey]->moveTo(_x,_y); };
 	
-	bool isOnBorder(ofxVec2f _loc);
-	bool isOnBorder(int _x, int _y){isOnBorder(ofxVec2f(_x,_y));};
+	bool isOnBorder(ofVec2f _loc);
+	bool isOnBorder(int _x, int _y){isOnBorder(ofVec2f(_x,_y));};
 };
 #endif

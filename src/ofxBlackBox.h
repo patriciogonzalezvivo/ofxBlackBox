@@ -29,6 +29,8 @@
  *
  * ***********************************************************************/
 
+// Check for updates and contributions at: http://github.com/patriciogonzalezvivo/ofxBlackBox
+
 #ifndef _ofxBLACKBOX
 #define _ofxBLACKBOX
 

@@ -39,13 +39,22 @@ void ofxBlackButton::draw(){
 	reCalcPos();
 	
 	ofColor fg,bg;
-	
-	if (over) {
-		fg = *background;
-		bg = *foreground;
+	if (*background == ofColor(0)){
+		if (over) {
+			fg = *background;
+			bg = *foreground;
+		} else {
+			fg = *foreground;
+			bg = *background;
+		}
 	} else {
 		fg = *foreground;
 		bg = *background;
+		
+		if (over)
+			bg.setBrightness(100);
+		else
+			bg.setBrightness(255);
 	}
 	
 	ofEnableAlphaBlending();

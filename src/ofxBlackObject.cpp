@@ -43,8 +43,8 @@ void ofxBlackObject::reCalcPos(){
 	position += *windowCenter;
 }
 
-bool ofxBlackObject::isOver(ofxVec2f _location){
-	ofxVec2f dirToCenter = position - _location;
+bool ofxBlackObject::isOver(ofVec2f _location){
+	ofVec2f dirToCenter = position - _location;
 	float theta = atan2(dirToCenter.x,dirToCenter.y)-(PI/2);
 	float r = dirToCenter.length();
 	float x = r * cos(theta + *windowNorth);
