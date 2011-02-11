@@ -46,10 +46,9 @@ public:
 	
 	void setIndependentColor(){ background = color;};
 	
-	void draw();						// First update. Then draw.
+	void draw();
 	
-private:
-	void rBox();					// Draw the round box corner
+	void rBox(float _width, float _height);
 };
 
 #endif

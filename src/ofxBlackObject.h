@@ -85,7 +85,7 @@ public:
 	
 	// Checkers. someday this will become events
 	bool over;
-	bool isOver(ofVec2f _location);
+	virtual bool isOver(ofVec2f _location);
 	bool isOver(int _x, int _y){isOver(ofVec2f(_x,_y));};
 };
 

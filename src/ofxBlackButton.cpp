@@ -64,7 +64,7 @@ void ofxBlackButton::draw(){
 	
 		ofSetColor(bg.r,bg.g,bg.b,*alpha);
 		ofFill();
-		rBox();
+		rBox(width,height);
 		
 		/*
 		ofNoFill();
@@ -81,12 +81,15 @@ void ofxBlackButton::draw(){
 	ofEnableAlphaBlending();
 }
 
-void ofxBlackButton::rBox(){
-	float a = height/6*(*scale);
-	float b = a/4;
+void ofxBlackButton::rBox(float _width, float _height){
+	//float a = height/6*(*scale):
+	//float b = a/4;
 	
-	float W = width/2*(*scale);
-	float H = height/2*(*scale);
+	float W = _width*.5*(*scale);
+	float H = _height*.5*(*scale);
+	
+	float a = (  (H < W)? H : W )/2;//*(*scale);
+	float b = a/3;//*(*scale);
 	
 	ofBeginShape(); 
 	ofVertex(		W -a,	-H );

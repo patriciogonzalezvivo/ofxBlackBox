@@ -230,6 +230,34 @@ void ofxBlackWindow::loadObject(int _instance){
 			b->act = XML.getValue("ACTION","no action found");
 		
 			objects.push_back(b);
+		} else if (typeName == "SLIDER"){
+			ofxBlackSlider * s = new ofxBlackSlider(XML.getValue("VERTICAL",true), 
+													XML.getValue("VALUE",5),
+													XML.getValue("MIN",0),
+													XML.getValue("MAX",10));
+			s->setScale(&scale);
+			s->setFont(&defaultFont);
+			s->setWindowNorth(&angle);
+			s->setWindowCenter(&position);
+			
+			s->setColors(&foreground, &background);
+			if (XML.tagExists("BACKGROUND",0)){
+				s->color = new ofColor();
+				
+				s->color->r = XML.getValue("BACKGROUND:RED", 0);
+				s->color->g = XML.getValue("BACKGROUND:GREEN", 0);
+				s->color->b = XML.getValue("BACKGROUND:BLUE", 0);
+				s->setIndependentColor();
+			}
+			
+			s->setAlpha(&alpha);
+			
+			s->setSize(XML.getValue("WIDTH",50), XML.getValue("HEIGHT",30));
+			s->setLetter(XML.getValue("TEXT"," "));
+			
+			s->act = XML.getValue("ACTION","no action found");
+			
+			objects.push_back(s);
 		} else {
 			cout << "ERROR loading the object number "<< _instance << endl;
 		}
@@ -271,6 +299,13 @@ void ofxBlackWindow::autoVerticalArrange(){
 		objects[i]->moveTo(tempX,tempY);
 		XML.popTag();
 	}
+}
+
+ofxBlackObject *ofxBlackWindow::operator[](unsigned int i){
+	if (i >= 0 && i < objects.size() )
+		return objects[i];
+	else 
+		return 0;
 }
 			
 // --------------------------------------------------- RENDER
@@ -335,15 +370,19 @@ void ofxBlackWindow::rBox(){
 	float W = width/2;
 	float H = height/2;
 	
+	float a = (  (H < W)? H : W )/4;//*(*scale);
+	float b = a/3;//*(*scale);
+	
+	/*
 	float a, b;
 	
-	if (W <= 50){
+	if (W <= 100){
 		a = height/24;
 		b = a/12;
 	} else {
-		a = (height/12);
+		a = height/12;
 		b = a/6;
-	}
+	}*/
 	
 	ofEnableAlphaBlending();	
 	ofBeginShape(); 
@@ -387,7 +426,6 @@ bool ofxBlackWindow::isOver(int _x , int _y){
 	float x = r * cos(theta + angle);
 	float y = r * sin(theta + angle);
 	
-	//if (position.distance(_location) <= width/2) pressed = true;
 	if ( (x <= width*0.5) && (x >= -width*0.5) && (y <= height*0.5) && (y >= -height*0.5)) 
 		over = true;
 	else 
@@ -445,6 +483,10 @@ void ofxBlackWindow::tuioAdded(ofxTuioCursor &tuioCursor){
 }
 
 void ofxBlackWindow::tuioUpdated(ofxTuioCursor &tuioCursor){
+	ofVec2f loc = ofVec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+	if (isOver(loc) && (!close))
+		checkObjects(loc);
+	
 	// First it will update the information of the fingers that are over the border
 	for ( int i = 0; i < cursorsOnBorder.size(); i++)
 		if (cursorsOnBorder[i].idN == tuioCursor.getSessionId())

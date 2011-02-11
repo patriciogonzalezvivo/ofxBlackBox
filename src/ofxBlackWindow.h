@@ -46,6 +46,7 @@
 #include "ofxBlackText.h"
 #include "ofxBlackTextInput.h"
 #include "ofxBlackButton.h"
+#include "ofxBlackSlider.h"
 
 #include <vector>
 
@@ -62,6 +63,7 @@ public:
 	
 	int		focusObject;
 	vector	<ofxBlackObject*>	objects;
+	ofxBlackObject *operator[](unsigned int i);
 	
 	ofEvent<string> objectPressed;
 		

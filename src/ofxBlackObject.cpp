@@ -51,7 +51,8 @@ bool ofxBlackObject::isOver(ofVec2f _location){
 	float y = r * sin(theta + *windowNorth);
 	
 	//if (position.distance(_location) <= width/2) pressed = true;
-	if ( (x <= width*0.5*(*scale)) && (x >= -width*0.5*(*scale)) && (y <= height*0.5*(*scale)) && (y >= -height*0.5*(*scale))) over = true;
+	if ( (x <= width*0.5*(*scale)) && (x >= -width*0.5*(*scale)) && (y <= height*0.5*(*scale)) && (y >= -height*0.5*(*scale)))
+		over = true;
 	else over = false;
 	
 	return over;

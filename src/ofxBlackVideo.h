@@ -35,7 +35,7 @@
 
 #include "ofxBlackObject.h"
 
-#define	OF_VIDEO_WITH_ALPHA			// Coment this if you don´t have ofxAlpaVideoPlayer
+//#define	OF_VIDEO_WITH_ALPHA			// Coment this if you don´t have ofxAlpaVideoPlayer
 #ifdef OF_VIDEO_WITH_ALPHA			
 #include "ofxAlphaVideoPlayer.h"	// You can get it at: http://www.openframeworks.cc/forum/viewtopic.php?f=9&t=364&p=19620#p19620
 #endif
