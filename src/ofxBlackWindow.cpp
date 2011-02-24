@@ -232,9 +232,9 @@ void ofxBlackWindow::loadObject(int _instance){
 			objects.push_back(b);
 		} else if (typeName == "SLIDER"){
 			ofxBlackSlider * s = new ofxBlackSlider(XML.getValue("VERTICAL",true), 
-													XML.getValue("VALUE",5),
-													XML.getValue("MIN",0),
-													XML.getValue("MAX",10));
+													XML.getValue("VALUE",0.5),
+													XML.getValue("MIN",0.1),
+													XML.getValue("MAX",10.2));
 			s->setScale(&scale);
 			s->setFont(&defaultFont);
 			s->setWindowNorth(&angle);
@@ -415,11 +415,9 @@ void ofxBlackWindow::rBox(){
 }
 
 // ------------------------------------------------------ ACTIONS 
-bool ofxBlackWindow::isOver(int _x , int _y){
+bool ofxBlackWindow::isOver(ofVec2f _location){
 	bool over;
 	
-	ofVec2f _location;
-	_location.set(_x,_y);
 	ofVec2f dirToCenter = position - _location;
 	float theta = atan2(dirToCenter.x,dirToCenter.y)-(PI/2);
 	float r = dirToCenter.length();
@@ -484,54 +482,55 @@ void ofxBlackWindow::tuioAdded(ofxTuioCursor &tuioCursor){
 
 void ofxBlackWindow::tuioUpdated(ofxTuioCursor &tuioCursor){
 	ofVec2f loc = ofVec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
-	if (isOver(loc) && (!close))
+	if (isOver(loc) && (!close)){
 		checkObjects(loc);
 	
-	// First it will update the information of the fingers that are over the border
-	for ( int i = 0; i < cursorsOnBorder.size(); i++)
-		if (cursorsOnBorder[i].idN == tuioCursor.getSessionId())
-			cursorsOnBorder[i].loc = ofVec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+		// First it will update the information of the fingers that are over the border
+		for ( int i = 0; i < cursorsOnBorder.size(); i++)
+			if (cursorsOnBorder[i].idN == tuioCursor.getSessionId())
+				cursorsOnBorder[i].loc = ofVec2f(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
 	
-	// Then check if there is two fingers over it
-	if (cursorsOnBorder.size() == 2){
-		int sta = -1;	// a NULL parameter
-		int din = -1;	// a NULL parameter
+		// Then check if there is two fingers over it
+		if (cursorsOnBorder.size() == 2){
+			int sta = -1;	// a NULL parameter
+			int din = -1;	// a NULL parameter
 		
 		// First it will watch witch one is the static finger and witch one is the dinamic
-		for ( int i = 0; i < cursorsOnBorder.size(); i++)
-			if (cursorsOnBorder[i].loc == oldLoc[i]) sta = i;
-			else din = i;
+			for ( int i = 0; i < cursorsOnBorder.size(); i++)
+				if (cursorsOnBorder[i].loc == oldLoc[i]) sta = i;
+				else din = i;
 		
 		// If one it´s the dinamic and the other one the static it´s all OK and it´s time to calculate new parameters
-		if ((sta != -1) && (din != -1) && (din != sta)){
-			ofVec2f Di = oldLoc[sta] - oldLoc[din];		// Get Vector between OLD finger position
-			ofVec2f Dii = oldLoc[sta] - cursorsOnBorder[din].loc; // Get Vector between NEW finger position
+			if ((sta != -1) && (din != -1) && (din != sta)){
+				ofVec2f Di = oldLoc[sta] - oldLoc[din];		// Get Vector between OLD finger position
+				ofVec2f Dii = oldLoc[sta] - cursorsOnBorder[din].loc; // Get Vector between NEW finger position
 			
-			float di = Di.length();						// Get OLD finger distance
-			float dii = Dii.length();					// Get NEW finger distance
+				float di = Di.length();						// Get OLD finger distance
+				float dii = Dii.length();					// Get NEW finger distance
 			
-			float scaleF = dii / di;					// Set the scale diference before and after
+				float scaleF = dii / di;					// Set the scale diference before and after
 			
-			float ri = -1*atan2(Di.x,Di.y)+(PI/2);		// Get OLD fingers inclination
-			float rii = -1*atan2(Dii.x,Dii.y)+(PI/2);	// Get NEW fingers inclination
+				float ri = -1*atan2(Di.x,Di.y)+(PI/2);		// Get OLD fingers inclination
+				float rii = -1*atan2(Dii.x,Dii.y)+(PI/2);	// Get NEW fingers inclination
 			
-			float rotateF = rii - ri;					// Set the angle diference before and after
+				float rotateF = rii - ri;					// Set the angle diference before and after
 			
-			ofVec2f oldStaCursorToCenter = position - oldLoc[sta] ;	// Get the OLD vector from the static finger to the center of the keyboard
-			float oldAngleToCenter = -1*atan2(oldStaCursorToCenter.x,oldStaCursorToCenter.y)+(PI/2);	// Get OLD Angle to the center 
-			float oldRadioToCenter = oldStaCursorToCenter.length();		// Get the OLD distance from the static figer to the center
+				ofVec2f oldStaCursorToCenter = position - oldLoc[sta] ;	// Get the OLD vector from the static finger to the center of the keyboard
+				float oldAngleToCenter = -1*atan2(oldStaCursorToCenter.x,oldStaCursorToCenter.y)+(PI/2);	// Get OLD Angle to the center 
+				float oldRadioToCenter = oldStaCursorToCenter.length();		// Get the OLD distance from the static figer to the center
 			
-			float newRadioToCenter = oldRadioToCenter * scaleF;		// Set the NEW distance to the center
-			float newAngleToCenter = oldAngleToCenter + rotateF;	// Set the NEW angle to the center
-			ofVec2f newStaCursorToCenter = ofVec2f(newRadioToCenter*cos(newAngleToCenter),newRadioToCenter*sin(newAngleToCenter)); // Set the NEW vector from the static finger to the center of the keyboard
+				float newRadioToCenter = oldRadioToCenter * scaleF;		// Set the NEW distance to the center
+				float newAngleToCenter = oldAngleToCenter + rotateF;	// Set the NEW angle to the center
+				ofVec2f newStaCursorToCenter = ofVec2f(newRadioToCenter*cos(newAngleToCenter),newRadioToCenter*sin(newAngleToCenter)); // Set the NEW vector from the static finger to the center of the keyboard
 			
-			resize(scaleF);											// RESIZE the scale diference proportion
-			rotate(rotateF);										// ROTATE the diference in angle
-			position = oldLoc[sta] + newStaCursorToCenter;			// MOVE	the draged distance
-		}
+				resize(scaleF);											// RESIZE the scale diference proportion
+				rotate(rotateF);										// ROTATE the diference in angle
+				position = oldLoc[sta] + newStaCursorToCenter;			// MOVE	the draged distance
+			}
 		
-		oldLoc[0] = cursorsOnBorder[0].loc;
-		oldLoc[1] = cursorsOnBorder[1].loc;
+			oldLoc[0] = cursorsOnBorder[0].loc;
+			oldLoc[1] = cursorsOnBorder[1].loc;
+		}
 	}
 }
 

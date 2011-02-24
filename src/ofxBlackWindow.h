@@ -97,8 +97,8 @@ public:
 	void	rBox();
 	
 	//------------------------------------------------ ACTIONS
-	bool	isOver(int _x, int _y);
-	bool	isOver(ofVec2f _loc){isOver(_loc.x,_loc.y);};
+	bool	isOver(ofVec2f _loc);
+	bool	isOver(int _x, int _y){isOver(ofVec2f(_x,_y));};
 	
 	bool	checkObjects(ofVec2f _loc);
 	bool	checkObjects(int _x, int _y){checkObjects(ofVec2f(_x,_y));};
